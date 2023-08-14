@@ -1,0 +1,34 @@
+{
+  "remote.portsAttributes": {
+    "3000": {
+      "label": "React Application"
+    }
+  },
+  "remote.SSH.defaultForwardedPorts": [
+    {
+      "localPort": 3000,
+      "name": "React Application Port",
+      "remotePort": 3000
+    }
+  ],
+  "prettier.documentSelectors": ["**/*.ts"],
+  "prettier.configPath": ".prettierrc.json",
+  "prettier.ignorePath": ".prettierignore",
+  "prettier.prettierPath": "node_modules/prettier",
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true,
+      "source.fixAll": true
+    }
+  },
+  "[json]": {
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "editor.suggest.insertMode": "replace",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  }
+}
