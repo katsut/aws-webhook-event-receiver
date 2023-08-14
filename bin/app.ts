@@ -24,10 +24,10 @@ export class RootStack extends cdk.Stack {
   constructor(scope: Construct, constructId: string, props?: cdk.StackProps) {
     super(scope, constructId, props)
 
-    const stackName = `EventStack`
+    const stackName = `WebhookStack`
     const stack = new Stack(this, stackName, {})
   }
 }
 
-const rootStackName = `EventRootStack${envName}`
+const rootStackName = `WebhookRootStack${envName}`
 const batch = new RootStack(app, rootStackName, { env })
