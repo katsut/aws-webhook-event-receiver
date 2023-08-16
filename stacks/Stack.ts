@@ -32,34 +32,37 @@ export class Stack extends cdk.NestedStack {
     const role = new iam.Role(this, 'ApiGatewayToKinesisRole', {
       assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com')
     })
+    role.addToPolicy(
+      new iam.PolicyStatement({
+        actions: ['kinesis:PutRecord'],
+        effect: iam.Effect.ALLOW,
+        resources: [stream.streamArn]
+      })
+    )
     webhook.addMethod(
       'POST',
       new apigateway.AwsIntegration({
         service: 'kinesis',
         action: 'PutRecord',
         options: {
-          credentialsRole: role
-          //   passthroughBehavior: apigateway.PassthroughBehavior.WHEN_NO_TEMPLATES,
-          //   // Kinesis Data Streamsに流すための形式にリクエストデータを整形
-          //   // "StreamName" : 対象のストリーム名を設定
-          //   // "Data" : Kinesis Data Streamsへ渡すデータ本体
-          //   // "PartitionKey" : ストリーム内のどのシャードに流すか判断するための値
-          //   requestTemplates: {
-          //     'application/json': `{
-          //       "StreamName": "${stream.streamName}",
-          //       "Data": "$util.base64Encode($input.json('$'))",
-          //       "PartitionKey": $input.json('$.uuid')
-          //     }`
-          //   },
+          credentialsRole: role,
+          passthroughBehavior: apigateway.PassthroughBehavior.WHEN_NO_TEMPLATES,
+          requestTemplates: {
+            'application/json': `{
+              "StreamName": "${stream.streamName}",
+              "Data": "$util.base64Encode($input.json('$'))",
+              "PartitionKey": $input.json('$.created')
+            }`
+          },
           //   // 統合レスポンスの設定
-          //   integrationResponses: [
-          //     {
-          //       statusCode: '200',
-          //       responseTemplates: {
-          //         'application/json': `{"result":"ok"}`
-          //       }
-          //     }
-          //   ]
+          integrationResponses: [
+            {
+              statusCode: '200',
+              responseTemplates: {
+                'application/json': `{"result":"ok"}`
+              }
+            }
+          ]
         }
       }),
       //メソッドレスポンスの設定
